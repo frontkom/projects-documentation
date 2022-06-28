@@ -1,4 +1,4 @@
-# Installation of nymedia Drupal projects
+# Installation of Nymedia Drupal projects
 
 ## Short version
 
