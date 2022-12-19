@@ -36,6 +36,14 @@ To make this as easy as possible, you can use this one-liner that runs all of th
 clear && echo "What is the machine name of the contrib module (i.e commerce, or address)?" && read -r MODULE_NAME && composer update drupal/$MODULE_NAME --with-dependencies && drush updb -y && composer export
 ``` 
 
+Some modules would require you to also update them with dependencies. In which case you would just append that at the right place in the one-liner:
+
+```
+clear && echo "What is the machine name of the contrib module (i.e commerce, or address)?" && read -r MODULE_NAME && composer update drupal/$MODULE_NAME --with-dependencies && drush updb -y && composer export
+``` 
+
+Proceed to upgrade each and every one of them, until there are no incomatible contrib modules on the upgrade status page.
+
 ## Common errors and how to solve them
 
 ### Crashing version of addressing library
@@ -46,4 +54,8 @@ If you get this error:
 PHP Fatal error:  Declaration of Drupal\address\Repository\AddressFormatRepository::processDefinition($countryCode, array $definition) must be compatible with CommerceGuys\Addressing\AddressFormat\AddressFormatRepository::processDefinition(string $countryCode, array $definition): array in /app/drupal/modules/contrib/address/src/Repository/AddressFormatRepository.php on line 38
 ``` 
 
-You can simply downgrade to addressing version 1.3.0
+You can simply downgrade to addressing version 1.3.0. For example by doing this:
+
+```  
+composer require "commerceguys/addressing:~1.3.0"
+``` 
