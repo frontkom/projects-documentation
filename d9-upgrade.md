@@ -46,6 +46,15 @@ Proceed to upgrade each and every one of them, until there are no incomatible co
 
 ## Common errors and how to solve them
 
+### Not able to update `file_mdm` module
+
+Solved by requiring image_effects 3 and running update with dependencies:
+
+```
+composer require drupal/image_effects:^3 --no-update
+composer update drupal/image_effects --with-dependencies
+
+
 ### Crashing version of addressing library
 
 If you get this error:
