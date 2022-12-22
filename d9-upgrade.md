@@ -33,7 +33,7 @@ It is extremely important to upgrade all of the contrib modules following a spec
 To make this as easy as possible, you can use this one-liner that runs all of those commands and asks for the module name:
 
 ``` 
-clear && echo "What is the machine name of the contrib module (i.e commerce, or address)?" && read -r MODULE_NAME && composer update drupal/$MODULE_NAME --with-dependencies && drush updb -y && composer export
+clear && echo "What is the machine name of the contrib module (i.e commerce, or address)?" && read -r MODULE_NAME && composer update drupal/$MODULE_NAME && drush updb -y && composer export
 ``` 
 
 Some modules would require you to also update them with dependencies. In which case you would just append that at the right place in the one-liner:
