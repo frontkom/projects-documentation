@@ -57,6 +57,36 @@ composer require 'drupal/core-recommended:^9' 'drupal/core-composer-scaffold:^9'
 
 ## Common errors and how to solve them
 
+### Missing phpunit package
+
+If you see this error in the static tests:
+
+``` 
+Fatal error: Trait 'Symfony\Bridge\PhpUnit\Legacy\PolyfillAssertTrait' not found in /var/www/html/drupal/sites/simpletest/Assert.php on line 68
+``` 
+
+You will have to get a newer phpunit version, and the correct version of phpunit-bridge. So update your composer.json with something like this:
+
+```
+diff --git a/composer.json b/composer.json
+index 0dfb896b..ab46e64b 100644
+--- a/composer.json
++++ b/composer.json
+@@ -76,7 +76,8 @@
+         "nymediaas/nymedia_ci_overrides": "dev-8.x-1.x",
+         "phpstan/phpstan-deprecation-rules": "^1",
+         "phpstan/phpstan-phpunit": "^1",
+-        "phpunit/phpunit": "^7"
++        "phpunit/phpunit": "^8",
++        "symfony/phpunit-bridge": "^5.3"
+``` 
+
+And then run this command:
+
+``` 
+composer update phpunit/phpunit symfony/phpunit-bridge --with-dependencies
+```
+
 ### Crash with entity_reference_revisions
 
 Right after upgrade you might get this error:
