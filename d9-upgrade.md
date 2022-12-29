@@ -44,6 +44,16 @@ clear && echo "What is the machine name of the contrib module (i.e commerce, or 
 
 Proceed to upgrade each and every one of them, until there are no incomatible contrib modules on the upgrade status page.
 
+If the project is set to use a site schema, remember to commit site schema files along with composer and config changes.
+
+## Upgrade Drupal core
+
+First we do this:
+
+```
+composer require 'drupal/core-recommended:^9' 'drupal/core-composer-scaffold:^9' --update-with-dependencies --no-update
+
+
 ## Common errors and how to solve them
 
 ### Not able to update `file_mdm` module
