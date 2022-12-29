@@ -53,9 +53,37 @@ First we do this:
 
 ```
 composer require 'drupal/core-recommended:^9' 'drupal/core-composer-scaffold:^9' --update-with-dependencies --no-update
-
+``` 
 
 ## Common errors and how to solve them
+
+### Crash with entity_reference_revisions
+
+Right after upgrade you might get this error:
+
+``` 
+Error: Call to undefined method Drupal\Core\Entity\ContentEntityType::getLowercaseLabel() in /var/www/html/drupal/modules/contrib/entity_reference_revisions/entity_reference_revisions.views.inc on line 102 #0 /var/www/html/drupal/core/modules/views/src/ViewsData.php(236): entity_reference_revisions_views_data()
+``` 
+
+This probably means you are using an outdated patch for entity_reference_revisions. You may or may not have to remove the patch via composer.json, and `patches_ignore` like this:
+
+```
+        "patches-ignore": {
+            "nymediaas/nymedia_commerce_profile": {
+                "drupal/entity_reference_revisions": {
+                    "Views doesn't recognize relationship to host (https://www.drupal.org/node/2799479)": "https://www.drupal.org/files/issues/2019-10-07/2799479-91-DO_NOT_COMMIT.patch"
+                }
+            }
+        },
+```
+
+In addition, if you have the patch locally in the project, remove that one, or rather replace it so it looks like this:
+
+``` 
+            "drupal/entity_reference_revisions": {
+                "Views doesn't recognize relationship to host (https://www.drupal.org/project/entity_reference_revisions/issues/2799479)": "https://www.drupal.org/files/issues/2021-04-16/entity_reference_2799479-158-no-tests.patch"
+            },
+`
 
 ### Not able to update `file_mdm` module
 
