@@ -113,7 +113,7 @@ In addition, if you have the patch locally in the project, remove that one, or r
             "drupal/entity_reference_revisions": {
                 "Views doesn't recognize relationship to host (https://www.drupal.org/project/entity_reference_revisions/issues/2799479)": "https://www.drupal.org/files/issues/2021-04-16/entity_reference_2799479-158-no-tests.patch"
             },
-`
+```
 
 ### Not able to update `file_mdm` module
 
