@@ -55,6 +55,19 @@ First we do this:
 composer require 'drupal/core-recommended:^9' 'drupal/core-composer-scaffold:^9' --update-with-dependencies --no-update
 ``` 
 
+Then, hopefully, if we are lucky. This should now work:
+
+```
+composer update "drupal/core*" "symfony/*" composer/installers drush/drush --with-dependencies
+```
+
+If it does not work, use this command to try to troubleshoot:
+
+```
+# Replace 9.5.1 with whatever is the latest drupal core.
+composer why-not drupal/core 9.5.1
+```
+
 ## Common errors and how to solve them
 
 ### Missing phpunit package
