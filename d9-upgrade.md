@@ -100,6 +100,16 @@ And then run this command:
 composer update phpunit/phpunit symfony/phpunit-bridge --with-dependencies
 ```
 
+### PhpunitCompatibilityTrait missing
+
+If you get this error in static tests:
+
+```
+Scanned file /var/www/html/drupal/core/tests/Drupal/Tests/PhpunitCompatibilityTrait.php does not exist.
+```
+
+Simply replace the `PhpunitCompatibilityTrait.php` with `PhpUnitCompatibilityTrait.php` in your phpstan.neon file, because the file was renamed from Drupal Core 9.1
+
 ### Crash with entity_reference_revisions
 
 Right after upgrade you might get this error:
