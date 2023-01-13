@@ -145,7 +145,7 @@ Solved by requiring image_effects 3 and running update with dependencies:
 ```
 composer require drupal/image_effects:^3 --no-update
 composer update drupal/image_effects --with-dependencies
-
+``` 
 
 ### Crashing version of addressing library
 
@@ -159,4 +159,8 @@ You can simply downgrade to addressing version 1.3.0. For example by doing this:
 
 ```  
 composer require "commerceguys/addressing:~1.3.0"
-``` 
+```
+
+### Unable to create coupons after Commerce 2.24 update (not user 1)
+
+Administrator role needs the permission ```administer commerce_promotion```.
