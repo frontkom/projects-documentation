@@ -164,3 +164,14 @@ composer require "commerceguys/addressing:~1.3.0"
 ### Unable to create coupons after Commerce 2.24 update (not user 1)
 
 Administrator role needs the permission ```administer commerce_promotion```.
+
+### Site installation crashes when installing ckeditor_media_embed
+If you composer site-install crashes with:
+```
+> ./vendor/bin/drupal ckeditor_media_embed:install
+
+Error: ] Command "ckeditor_media_embed:install", is not a valid command name.   
+```
+
+Go to the main composer.json and change
+`"./vendor/bin/drupal ckeditor_media_embed:install"` to `"./vendor/bin/drush ckeditor_media_embed:install"`
