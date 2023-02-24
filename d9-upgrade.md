@@ -8,6 +8,33 @@
 - Make sure the project has upgrade status enabled
 - Make sure the project has `drupal/drupal-extension` version 4 or higher.
 
+When updating `drupal/drupal-extension` make sure the following files is also updated:
+
+`.github/workflows/run-tests.yml`
+```diff
+        IS_CI_ENVIRONMENT: 1
+        COMPOSER_MEMORY_LIMIT: -1
+        COMPOSER_ALLOW_SUPERUSER: 1
+-       BEHAT_PARAMS: "{\"extensions\": {\"Behat\\\\MinkExtension\":{\"base_url\": \"http://web\"}, \"Drupal\\\\DrupalExtension\": {\"drupal\": {\"drupal_root\": \"/var/www/html/drupal\"}}}}"
++       BEHAT_PARAMS: "{\"extensions\": {\"Drupal\\\\MinkExtension\":{\"base_url\": \"http://web\"}, \"Drupal\\\\DrupalExtension\": {\"drupal\": {\"drupal_root\": \"/var/www/html/drupal\"}}}}"
+    # Those are project (phpfpm, nginx, db, elasticsearch) and test (chromedriver) dependencies.
+    services:
+      php:
+```
+`behat.yml.dist`
+
+```diff
+        - Nymedia\Tests\Context\FeatureContext
+        - Nymedia\Tests\Context\ProductContext
+  extensions:
+-   Behat\MinkExtension:
++   Drupal\MinkExtension:
+      files_path: "%paths.base%/tests/dummy_files"
+      goutte: ~
+      selenium2:
+```
+
+
 ## Changing new required settings
 
 You can start by going to `admin/reports/upgrade-status` where this will also be listed. Do the following change to a _committed_ settings.php file, which probably in most project means `drupal/sites/default/settings.php`:
