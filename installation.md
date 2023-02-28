@@ -50,4 +50,5 @@ composer site-install
 
 You can also pass along the database settings to this command, and it will be added to `settings.local.php` automatically. As an example, if you have a database available at localhost, with the default port, and the user is `root` and the password is `root`. And you want your database to be named `mydb`. Then run this as the command:
 
+```
 DB_PARAMS="--db-url=mysql://root:root@localhost/mydb" composer site-install
