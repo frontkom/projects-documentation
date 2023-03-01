@@ -54,4 +54,10 @@ $settings['elasticsearch_indexer']['index_name'] = 'my_project';
 $settings['elasticsearch_indexer']['index_type'] = 'product';
 ```
 
+### (Re)indexing the search
 
+Depending on the settings in the above section you should now know if your project uses the index type "node" or "product". In most cases it will be "product". If that is the case, this command will delete the index, set up index templates, queue all items for indexing, and run the indexing queue for you:
+
+``` 
+drush eshd product && drush eshs product && drush eshr product && drush queue-run elasticsearch_helper_indexing
+```
