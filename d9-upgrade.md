@@ -97,6 +97,34 @@ composer why-not drupal/core 9.5.1
 
 ## Common errors and how to solve them
 
+### Problem with patch from `nymedia_profile`:
+
+If your project crashes because it can not apply the patch we use for settings.php. This one specifically:
+
+```
+"Keep setting.php intact, add local config to settings.local.php": "https://github.com/zaporylie/drupal/commit/6f0b4e95f28ae945c6fa2bf0e5e81850d3e695f8.patch",
+``` 
+
+Then we need to replace that patch with one that is compatible with Drupal 9. So remove the patch by doing this:
+
+```
+        "patches-ignore": {
+            "nymediaas/nymedia_profile": {
+                "drupal/core": {
+                    "Keep setting.php intact, add local config to settings.local.php": "https://github.com/zaporylie/drupal/commit/6f0b4e95f28ae945c6fa2bf0e5e81850d3e695f8.patch"
+                }
+            },
+```
+
+And then add a patch that is compatible with Drupal 9:
+
+``` 
+        "patches": {
+            "drupal/core": {
+                "Keep setting.php intact, add local config to settings.local.php": "https://github.com/eiriksm/drupal/commit/64ad2b820b2f2d93e994b6ed2889586e355ed55f.patch"
+            },
+```
+
 ### Missing phpunit package
 
 If you see this error in the static tests:
