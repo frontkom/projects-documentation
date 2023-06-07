@@ -135,3 +135,34 @@ you should try to modify the key in checkout action in the workflow, like this:
        # TODO: Split the following command into multiple steps and explicitly call each test suite (composer validate, phpcs, phpunit, etc)
 
 ```
+
+### Failing scenario tempe_426.feature
+
+If you see the scenario vendor/nymedia/store8-tests/features/issues/tempe_426.feature failing with a message:
+```
+Found a PHP warning/notice or similar. The message was: Deprecated function: Return type of Klarna\Rest\Resource::exchangeArray($array) should either be compatible with ArrayObject::exchangeArray(object|array $array): array, or the #[\ReturnTypeWillChange] attribute should be used to temporarily suppress the notice in include() (line 582 of /var/www/html/vendor/composer/ClassLoader.php) #0 /var/www/html/drupal/core/includes/bootstrap.inc(347): _drupal_error_handler_real(8192, 'Return type of ...', '/var/www/html/v...', 109)
+```
+
+It is because of incompatibility `centarro/kco_rest` with PHP 8, mentioned in [Trondheim-Spektrum PHP 8 update PR](https://github.com/nymedia/trondheim-spektrum/pull/10#issuecomment-1514560726)
+Our current solution for that is to create and apply the following patch:
+```php
+            "centarro/kco_rest": {
+                "PHP 8 compatibility": "patches/kco-rest-php-8-compatibility.patch"
+            }
+```
+
+```diff
+diff --git a/src/Klarna/Rest/Resource.php b/src/Klarna/Rest/Resource.php
+index 35a78c2..a484516 100644
+--- a/src/Klarna/Rest/Resource.php
++++ b/src/Klarna/Rest/Resource.php
+@@ -106,6 +106,7 @@ abstract class Resource extends \ArrayObject
+      * 
+      * @param array $array Data to be exchanged
+      */
++    #[\ReturnTypeWillChange]
+     public function exchangeArray($array)
+     {
+         $id = $this->getId();
+
+```
