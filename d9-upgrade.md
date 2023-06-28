@@ -230,3 +230,46 @@ Error: ] Command "ckeditor_media_embed:install", is not a valid command name.
 
 Go to the main composer.json and change
 `"./vendor/bin/drupal ckeditor_media_embed:install"` to `"./vendor/bin/drush ckeditor_media_embed:install"`
+
+### Unknown theme (gin / bartik or other)
+
+If your site install test fails with something like this:
+
+```
+ [notice] Starting Drupal installation. This takes a while.
+ [notice] Performed install task: install_select_language
+ [notice] Performed install task: install_select_profile
+ [notice] Performed install task: install_load_profile
+ [notice] Performed install task: install_verify_requirements
+ [notice] Performed install task: install_verify_database_ready
+ [notice] Performed install task: install_base_system
+ [notice] Performed install task: install_bootstrap_full
+ [notice] Performed install task: install_config_import_batch
+ [notice] Performed install task: install_config_download_translations
+
+In ThemeInstaller.php line 261:
+                       
+  Unknown theme: gin.  
+``` 
+
+That probably means some variation of enabling and disabling themes have ended up trying to uninstall gin even if it's not installed. This can happen if you have a module that installs a theme, but your config does not want to have it. Some background and research is available here:
+
+https://github.com/nymedia/bullski/issues/2027#issuecomment-1611399738
+
+The fix for that project was to enable the themes that was giving this error message. After fixing the issue with gin, it went on to complain about the same regarding bartik. So the complete fix was this:
+
+```diff
+diff --git a/config/common/core.extension.yml b/config/common/core.extension.yml
+index 31ce62dc..d921fa0f 100644
+--- a/config/common/core.extension.yml
++++ b/config/common/core.extension.yml
+@@ -241,6 +241,9 @@ module:
+   minimal: 1000
+   eu_cookie_compliance: 1001
+ theme:
++  gin: 0
++  claro: 0
++  bartik: 0
+   seven: 0
+   bootstrap: 0
+```
