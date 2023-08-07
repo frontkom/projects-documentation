@@ -2,6 +2,8 @@
 
 ## Common errors and how to fix them
 
+### Problem with `request_stack`.
+
 ```
 TypeError: MyClass::__construct(): Argument #X ($requestStack) must be of type Drupal\Core\Http\RequestStack, Symfony\Component\HttpFoundation\RequestStack given
 ```
@@ -24,4 +26,26 @@ Something like this:
  
  /**
 @@ -43,7 +43,7 @@ class MyClass {
+```
+
+### Problem with the goutte driver for behat
+
+```
+n GoutteFactory.php line 66:
+                                                           
+  Install MinkGoutteDriver in order to use goutte driver.  
+
+```
+
+Can probably be fixed with something like this:
+
+```diff
+--- a/behat.yml.dist
++++ b/behat.yml.dist
+@@ -20,12 +20,7 @@ default:
+       files_path: '%paths.base%/tests/files'
+       ajax_timeout: 15
+       base_url: http://127.0.0.1:8888
+-      goutte: ~
++      browserkit_http: ~
 ```
