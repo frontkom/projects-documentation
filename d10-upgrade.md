@@ -106,3 +106,38 @@ If you haven't done so already, you should probably also remove it from composer
 -        "bex/behat-screenshot": "^2.1",
          "drupal/coder": "^8.3.20",
 ```
+
+### Problem with event subscribers and parameters
+
+```
+Argument #1 ($event) must be of type Symfony\Component\HttpKernel\Event\GetResponseEvent, Symfony\Component\HttpKernel\Event\RequestEvent given
+```
+
+Typically this means you have to change the class expected. To something like this:
+
+```diff
++++ b/src/EventSubscriber/CartTokenSubscriber.php
+@@ -10,7 +10,7 @@ use Drupal\Core\Entity\EntityTypeManagerInterface;
+ use Drupal\Core\TempStore\SharedTempStoreFactory;
+ use Psr\Log\LoggerInterface;
+ use Symfony\Component\EventDispatcher\EventSubscriberInterface;
+-use Symfony\Component\HttpKernel\Event\GetResponseEvent;
++use Symfony\Component\HttpKernel\Event\RequestEvent;
+ use Symfony\Component\HttpKernel\KernelEvents;
+ 
+ /**
+@@ -83,10 +83,10 @@ final class CartTokenSubscriber implements EventSubscriberInterface {
+   /**
+    * Loads the token cart data and resets it to the session.
+    *
+-   * @param \Symfony\Component\HttpKernel\Event\GetResponseEvent $event
++   * @param \Symfony\Component\HttpKernel\Event\RequestEvent $event
+    *   The response event, which contains the current request.
+    */
+-  public function onRequest(GetResponseEvent $event) {
++  public function onRequest(RequestEvent $event) {
+```
+
+## Twig syntax errors
+
+### 
