@@ -161,6 +161,68 @@ Typically this means you have to change the class expected. To something like th
 
 Drupal 10 upgrades Twig from 2 to 3, so there are some differences. Here are some things you might encounter:
 
+### A template that extends another one cannot include content outside Twig blocks
+
+```
+Twig\Error\SyntaxError: A template that extends another one cannot include content outside Twig blocks. Did you forget to put the content inside a {% block %} tag? in Twig\Parser->filterBodyNodes()
+```
+
+This will happen if you extend another template (for example like this):
+
+```
+{% extends "input.html.twig" %}
+```
+
+And then proceed to put things outside the `block` tag. Something like this is not allowed:
+
+```
+{% apply spaceless %}
+  {%
+    set classes = [
+      'btn',
+      type == 'submit' ? 'js-form-submit',
+      icon and icon_position and not icon_only ? 'icon-' ~ icon_position,
+    ]
+  %}
+  {% block input %}
+```
+
+Usually with the corresponding end tag outside as well:
+
+```
+  {% endblock %}
+{% endapply %}
+```
+
+The fix in this case is to just move it inside. Like this:
+
+```
++++ b/drupal/themes/custom/store/global/templates/form-elements/input--button.html.twig
+@@ -22,7 +22,6 @@
+  * @see template_preprocess_input()
+  */
+ #}
+-{% apply spaceless %}
+   {%
+     set classes = [
+       'btn',
+@@ -31,6 +30,7 @@
+     ]
+   %}
+   {% block input %}
++    {% apply spaceless %}
+     {% if icon and icon_only %}
+       <button{{ attributes.addClass(classes, 'icon-only') }}>
+         <span class="sr-only">{{ label }}</span>
+@@ -44,5 +44,5 @@
+       {% endif %}
+     {% endif %}
+     {{ children }}
++    {% endapply %}
+   {% endblock %}
+-{% endapply %}
+```
+
 ### Unexpected "spaceless"
 
 ```
