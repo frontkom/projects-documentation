@@ -49,3 +49,28 @@ Can probably be fixed with something like this:
 -      goutte: ~
 +      browserkit_http: ~
 ```
+
+### Problem using screenshot package we usually use
+
+```
+In ExtensionManager.php line 194:
+                                                                                 
+  `Bex\Behat\ScreenshotExtension` extension file or class could not be located.  
+```
+
+Can be fixed by removing this from the file `behat.yml.dist`:
+
+```diff
+diff --git a/behat.yml.dist b/behat.yml.dist
+index f272e51..4f5a8e8 100644
+--- a/behat.yml.dist
++++ b/behat.yml.dist
+@@ -20,10 +20,6 @@ default:
+         - Nymedia\Tests\Context\FeatureContext
+         - Nymedia\Tests\Context\ProductContext
+   extensions:
+-    Bex\Behat\ScreenshotExtension:
+-      image_drivers:
+-        local:
+-          screenshot_directory: "%paths.base%/screenshots"
+```
