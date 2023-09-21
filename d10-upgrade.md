@@ -2,6 +2,25 @@
 
 ## Common errors and how to fix them
 
+### Problem with PHPUnit tests and ignoreFile
+
+```
+PHP Fatal error:  Uncaught InvalidArgumentException: Unknown configuration option "ignoreFile". in /var/www/html/vendor/symfony/phpunit-bridge/DeprecationErrorHandler/Configuration.php:302
+```
+
+This comes from the fact that Drupal supplies a config value to `symfony/phpunit-bridge`, which basically requires version 6. So while it's possible (dependency-wise) to have `symfony/phpunit-bridge` version 5.x installed together with Drupal 10, it really will crash the unit tests. The solution is quite simple though. Something like this:
+
+```
+--- a/composer.json
++++ b/composer.json
+@@ -124,7 +124,7 @@
+         "phpstan/phpstan-deprecation-rules": "^1.0",
+         "phpstan/phpstan-phpunit": "^1.0",
+         "phpunit/phpunit": "^9",
+-        "symfony/phpunit-bridge": "^5.3"
++        "symfony/phpunit-bridge": "^6"
+```
+
 ### Problem with `request_stack`.
 
 ```
