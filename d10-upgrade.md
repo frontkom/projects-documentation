@@ -161,6 +161,29 @@ Typically this means you have to change the class expected. To something like th
 
 Drupal 10 upgrades Twig from 2 to 3, so there are some differences. Here are some things you might encounter:
 
+### Unexpected "spaceless"
+
+```
+Twig\Error\SyntaxError: Unexpected "spaceless" tag (expecting closing tag for the "block" tag defined near line 67). in Twig\Parser->subparse()
+```
+
+I actually can not find a reference to `spaceless` being a tag, but I assume this is a relic of old twig, and it has been deprecated for a while, and now finally removed. There is no `spaceless` tag any more.
+
+Instead you would have to use `apply`: https://twig.symfony.com/doc/3.x/tags/apply.html
+
+So a simple fix would be something like this:
+
+```diff
++++ b/drupal/themes/custom/store/partials/components/blocks/media-banner/block--bundle--media-banner.html.twig
+@@ -80,13 +80,13 @@
+
+-    {% spaceless %}
++    {% apply spaceless %}
+     ...
+-    {% endspaceless %}
++    {% endapply %}
+```
+
 ### Unexpected token "name" of value "if"
 
 ```
