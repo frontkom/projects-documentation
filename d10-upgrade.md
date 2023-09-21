@@ -97,3 +97,12 @@ In UninitializedContextEnvironment.php line 45:
          - Nymedia\Tests\Context\FeatureContext
          - Nymedia\Tests\Context\ProductContext
 ```
+
+If you haven't done so already, you should probably also remove it from composer.json:
+
+```diff
+     },
+     "require-dev": {
+-        "bex/behat-screenshot": "^2.1",
+         "drupal/coder": "^8.3.20",
+```
