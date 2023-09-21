@@ -140,4 +140,36 @@ Typically this means you have to change the class expected. To something like th
 
 ## Twig syntax errors
 
-### 
+Drupal 10 upgrades Twig from 2 to 3, so there are some differences. Here are some things you might encounter:
+
+### Unexpected token "name" of value "if"
+
+```
+Twig\Error\SyntaxError: Unexpected token "name" of value "if" ("end of statement block" expected). in Twig\TokenStream->expect()
+```
+
+This happens if you add a condition to your `for` loop. It was supported, and documented in Twig 2.x: https://twig.symfony.com/doc/2.x/tags/for.html#adding-a-condition
+
+Not that this is an indication, but that paragraph does not exist for the `3.x` documentation: https://twig.symfony.com/doc/3.x/tags/for.html
+
+It also states in the `2.x` documentation some caveats to using it. So bottom line, one should not use it, and it does not work with Twig 3. The easiest fix is something like this:
+
+```
++++ b/drupal/themes/custom/store/partials/components/cart/commerce-coupon-redemption-form.html.twig
+@@ -33,11 +33,13 @@
+       <div class="coupon-redemption-form__coupons coupon-redemption-form__coupons--multiple">
+         <h3> {{ 'Applied coupons'|t }} </h3>
+         <table>
+-          {% for key, coupon in form.coupons if key|first != '#' %}
+-            <tr>
+-              <td> {{ coupon.code }} </td>
+-              <td> {{ coupon.remove_button }} </td>
+-            </tr>
++          {% for key, coupon in form.coupons %}
++            {% if key|first != '#' %}
++              <tr>
++                <td> {{ coupon.code }} </td>
++                <td> {{ coupon.remove_button }} </td>
++              </tr>
++            {% endif %}
+```
