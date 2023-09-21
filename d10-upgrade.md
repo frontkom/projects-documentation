@@ -50,7 +50,7 @@ Can probably be fixed with something like this:
 +      browserkit_http: ~
 ```
 
-### Problem using screenshot package we usually use
+### Problem with unknown screenshot class
 
 ```
 In ExtensionManager.php line 194:
@@ -73,4 +73,27 @@ index f272e51..4f5a8e8 100644
 -      image_drivers:
 -        local:
 -          screenshot_directory: "%paths.base%/screenshots"
+```
+
+### Problem with unknown Browser Context class
+
+```
+In UninitializedContextEnvironment.php line 45:
+                                                                                 
+  `Behatch\Context\BrowserContext` context class not found and can not be used.  
+                                                                                 
+```
+
+[This package is abandoned](https://github.com/Behatch/contexts) and we can no longer use it. Remove it from `behat.yml.dist`:
+
+```diff
+--- a/behat.yml.dist
++++ b/behat.yml.dist
+@@ -16,24 +16,19 @@ default:
+         - Drupal\DrupalExtension\Context\MarkupContext
+         - Drupal\DrupalExtension\Context\MessageContext
+         - Drupal\DrupalExtension\Context\DrushContext
+-        - Behatch\Context\BrowserContext
+         - Nymedia\Tests\Context\FeatureContext
+         - Nymedia\Tests\Context\ProductContext
 ```
