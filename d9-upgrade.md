@@ -1,4 +1,4 @@
-# Upgrading nymedia projects to Drupal 9
+# Upgrading projects to Drupal 9
 
 ## Getting the environment ready
 
