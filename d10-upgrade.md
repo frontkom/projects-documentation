@@ -94,6 +94,31 @@ index f272e51..4f5a8e8 100644
 -          screenshot_directory: "%paths.base%/screenshots"
 ```
 
+But if you actually need a replacement for the screenshot extension, try using https://github.com/drevops/behat-screenshot with this basic setup:
+
+```
+composer require drevops/behat-screenshot
+```
+
+```diff
+diff --git a/behat.yml.dist b/behat.yml.dist
+index 046f74f4..39ee431e 100644
+--- a/behat.yml.dist
++++ b/behat.yml.dist
+@@ -20,12 +20,13 @@ default:
+         - Drupal\DrupalExtension\Context\MarkupContext
+         - Drupal\DrupalExtension\Context\MessageContext
+         - Drupal\DrupalExtension\Context\DrushContext
++        - DrevOps\BehatScreenshotExtension\Context\ScreenshotContext
+   extensions:
++    DrevOps\BehatScreenshotExtension:
++      dir: '%paths.base%/screenshots'
++      fail: true
++      fail_prefix: 'failed_'
++      purge: false
+
+```
+
 ### Problem with unknown Browser Context class
 
 ```
