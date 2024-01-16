@@ -21,6 +21,45 @@ This comes from the fact that Drupal supplies a config value to `symfony/phpunit
 +        "symfony/phpunit-bridge": "^6"
 ```
 
+### Problem with deprecation in PHPUnit tests
+
+If your Unit tests result with something like this
+```
+OK (8 tests, 47 assertions)
+
+Remaining self deprecation notices (15)
+
+  15x: Creation of dynamic property Mock_ProductInterface_017f50b1::$__metadata is deprecated
+    15x in KlarnaSubscriberTest::testUnitShippingWeight from Drupal\Tests\store_checkout\Unit
+
+```
+and you wonder how to solve that, here's a suggestion below.
+
+1. Create a phpunit-ignore file with the pattern to ignore
+```
+# Patterns of messages to ignore in PHPUnit tests.
+
+%Creation of dynamic property .*__metadata is deprecated%
+```
+2. Add the phpunit-ignore file to the phpunit config
+```diff
+diff --git a/phpunit.xml.dist b/phpunit.xml.dist
+index 477083cc..4043b5be 100644
+--- a/phpunit.xml.dist
++++ b/phpunit.xml.dist
+@@ -9,6 +9,7 @@
+ >
+     <php>
+       <env name="SIMPLETEST_DB" value="sqlite://localhost//tmp/test.sqlite"/>
++      <env name="SYMFONY_DEPRECATIONS_HELPER" value="ignoreFile=./phpunit-ignore"/>
+     </php>
+     <testsuites>
+         <testsuite name="drupal-composer-project tests">
+```
+Link to docs where the solution comes from - https://symfony.com/doc/current/components/phpunit_bridge.html#ignoring-deprecations
+
+**You might consider using `baselineFile` instead of `ignoreFile`. Note that baselineFile doesn't allow the regular expressions for message to ignore**
+
 ### Problem with `request_stack`.
 
 ```
@@ -180,6 +219,81 @@ Typically this means you have to change the class expected. To something like th
     */
 -  public function onRequest(GetResponseEvent $event) {
 +  public function onRequest(RequestEvent $event) {
+```
+
+### Issues caused by old drush version
+
+If you run into this annoyng deprecation messages all over the CI or with every drush command you execute
+```
+Deprecated: Use of "static" in callables is deprecated in phar:///usr/local/bin/drush/vendor/webmozart/assert/src/Assert.php on line 1973
+```
+OR you can't see any logs in the CI behat tests because of this weird error (which is caused by the message above):
+```
+    ╳  The "--nocolor" option does not exist.  
+    ╳                                            
+    ╳  
+    ╳   (RuntimeException)
+    │
+    └─ @AfterStep # Nymedia\Tests\Context::logDumpAfterStep()
+```
+
+You should try updating `drush/drush` to version 12.
+
+Pro tip: At the moment when I'm writing this, I think our PHP containers are using Drush 11.6, so I had to use `./vendor/bin/drush` in the workflow instead of the global one
+
+Pro tip 2: Because of inconsistency between global and local drush there was a runtime exception in `Nymedia\Tests\Context::logDumpAfterStep()`. I decided to override the dumping errors after step to be able to see what's inside
+
+```diff
++  /**
++   * Prints from watchdog at failed step.
++   *
++   * @AfterStep
++   */
++  public function logDumpAfterStep(AfterStepScope $scope) {
++    $failed = (99 === $scope->getTestResult()->getResultCode());
++    if ($failed) {
++      $query = \Drupal::database()
++        ->select('watchdog', 'w');
++
++      $query
++        ->range(0, 30)
++        ->fields('w')
++        ->orderBy('wid', 'DESC');
++      $rsc = $query->execute();
++      $table = [];
++      while ($result = $rsc->fetchObject()) {
++        $table[$result->wid] = (array) $result;
++      }
++      print_r($table);
++    }
++  }
+```
+
+
+### JS error caused by usage of `once()`
+
+If you run into such error:
+```
+Error: Uncaught TypeError: $link.once is not a function ; Lineno: 73 ; Colno: 25
+```
+
+You need to go through all the custom JS libraries in the codebase and update it like:
+```diff
+-      $('.btn-cancel').once('cancel').on('click', function (event) {
++      $(once('cancel', '.btn-cancel')).on('click', function (event) {        
+```
+
+```diff
+-                  $link.once().click(function (e) {
++                  $(once('product_link_click', $link)).click(function (e) {
+```
+Afterwards, make sure the library you updated has `core/once` library set as dependencies
+```diff
+  dependencies:
+    - core/jquery
+    - core/drupal
++    - core/once
+
 ```
 
 ## Twig syntax errors
