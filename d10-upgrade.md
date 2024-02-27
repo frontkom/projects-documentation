@@ -416,3 +416,20 @@ It also states in the `2.x` documentation some caveats to using it. So bottom li
 +              </tr>
 +            {% endif %}
 ```
+
+### Call to deprecated method stopPropagation()
+
+When using [Upgrade Status module](https://www.drupal.org/project/upgrade_status) you may encouter warnings related to calling deprecated method `stopPropagation()` in your custom modules.
+
+```
+Call to deprecated method stopPropagation() of class Symfony\Component\EventDispatcher\Event: since Symfony 4.3, use "Symfony\Contracts\EventDispatcher\Event" instead
+```
+
+This is due to the fact that the `Symfony\Component\EventDispatcher\Event` class which Drupal 9 is relying on has been marked as deprecated in Symfony.
+
+In Drupal10 it has been changed to `Symfony\Contracts\EventDispatcher\Event` so there is actually no need to chenge anything in code and the warning can be ignored.
+
+
+### Using deprecated admin theme (eg Seven)
+
+If the project you are upgrading is using deprecated admin theme, it is recommended to switch to [Gin Admin Theme](https://www.drupal.org/project/gin).
