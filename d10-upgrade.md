@@ -427,7 +427,7 @@ Call to deprecated method stopPropagation() of class Symfony\Component\EventDisp
 
 This is due to the fact that the `Symfony\Component\EventDispatcher\Event` class which Drupal 9 is relying on has been marked as deprecated in Symfony.
 
-In Drupal10 it has been changed to `Symfony\Contracts\EventDispatcher\Event` so there is actually no need to chenge anything in code and the warning can be ignored.
+In Drupal10 it has been changed to `Symfony\Contracts\EventDispatcher\Event` so there is actually no need to change anything in code and the warning can be ignored.
 
 
 ### Using deprecated admin theme (eg Seven)
