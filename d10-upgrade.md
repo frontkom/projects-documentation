@@ -296,6 +296,15 @@ Afterwards, make sure the library you updated has `core/once` library set as dep
 
 ```
 
+### MenuActiveTrail service construct
+
+If you log in as an admin user and run into a completely white blank page or you run into this error
+```
+Found a PHP warning/notice or similar. The message was: TypeError: Drupal\Core\Menu\MenuActiveTrail::__construct(): Argument #1 ($menu_link_manager) must be of type Drupal\Core\Menu\MenuLinkManagerInterface, Drupal\Core\DependencyInjection\Container given, called in /var/www/html/drupal/core/lib/Drupal/Component/DependencyInjection/Container.php on line 259 in Drupal\Core\Menu\MenuActiveTrail->__construct() (line 44 of /var/www/html/drupal/core/lib/Drupal/Core/Menu/MenuActiveTrail.php). (Exception)
+```
+check the version of `drupal/gin_toolbar` you're using. Most likely you'll need to update to it to at least `8.x-1.0-rc5`
+Ref: https://www.drupal.org/project/gin_toolbar/issues/3404202
+
 ## Twig syntax errors
 
 Drupal 10 upgrades Twig from 2 to 3, so there are some differences. Here are some things you might encounter:
