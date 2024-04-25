@@ -269,6 +269,19 @@ Pro tip 2: Because of inconsistency between global and local drush there was a r
 +  }
 ```
 
+Pro tip 3: Since all the other behat steps that uses drush might fail, most likely you need to point the bin used by behat to the one from vendor. At the moment when I'm writing this, the global is used as default.
+
+```diff
+diff --git a/behat.yml.dist b/behat.yml.dist
+index a14008e4..2b669014 100644
+--- a/behat.yml.dist
++++ b/behat.yml.dist
+@@ -71,3 +71,4 @@ default:
+         header: ".region.region-header"
+       drush:
+         root: ./drupal
++        binary: ../vendor/bin/drush
+```
 
 ### JS error caused by usage of `once()`
 
