@@ -7,3 +7,4 @@ Descriptions of common patterns and processes across projects
 - [Local installation of our Drupal projects](https://github.com/frontkom/projects-documentation/blob/1.x/installation.md)
 - [Upgrading to Drupal 9](https://github.com/frontkom/projects-documentation/blob/1.x/d9-upgrade.md)
 - [Upgrading to Drupal 10](https://github.com/frontkom/projects-documentation/blob/1.x/d10-upgrade.md)
+- [Managing Translations](https://github.com/frontkom/projects-documentation/blob/1.x/translations.md)
