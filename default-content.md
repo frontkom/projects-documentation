@@ -34,6 +34,19 @@ index 11cd616..7ed20d8 100755
 +
 ```
 
+### Optional for Gutenberg content with images
+
+Gutenberg content with images will have the HTML exported including the ?itok token for the image style. Since this token will differ from environment to environment, a reinstall will make the images broken. To remedy this, you can add this to settings.php so local environments do not require the token to be correct:
+
+```diff
+ // Automatically generated include for settings managed by ddev.
+ if (file_exists(__DIR__ . '/settings.ddev.php') && getenv('IS_DDEV_PROJECT') == 'true') {
++  // This can be useful if the imported content includes an actual ?itok
++  // parameter. Since we usually only import this content when ddev is a thing,
++  // let's add it here.
++  $config['image.settings']['allow_insecure_derivatives'] = TRUE;
+```
+
 ## Import content by default when installing the project locally
 
 Usually you would want to install content by default when you install a project from scratch. But it could also be useful to update the content on an existing site. This is why we define a composer script for it, which is to be called at the end of the composer script for `site-install`. For example something like this:
@@ -66,7 +79,7 @@ This gave me the following output:
  [notice] Exported 1 entities of the "node" entity type.
 ```
 
-That sounds promising. However, the actual media item that I inserted in the middle of the content is not exported. To do that, I visit the media overview at `admin/content/media`. I find my image, and take a note of its id. In my case it's 1. So I export that as well:
+That sounds promising. However, the actual media item that I inserted in the middle of the content is not exported. The reason for this is that I used Gutenberg to edit this page, and the reference can not be automatically extracted. So I need to manually export the media item with its file. To do that, I visit the media overview at `admin/content/media`. I find my image, and take a note of its id. In my case it's 1. So I export that as well:
 
 ```
 drush default-content-deploy:export-with-references media --entity_id=1
