@@ -1,21 +1,11 @@
 # Local installation of Frontkom Drupal projects
 
-## Short version
+## Short version (for projects with default setup and ddev setup)
 
 1. Clone the repository
-2. Install dependencies
-
-3. Place the following in settings.local.php (deprecated as a requirement. Should automatically be inserted when you use ddev).
-
-```php
-$settings['environment'] = 'development';
-```
-
-4. Run the composer script `site-install`:
-
-```bash
-composer site-install
-```
+2. Start project with ddev (`ddev start`)
+3. Install dependencies (`ddev composer install`)
+4. Install the project (`ddev composer site-install`)
 
 ## Longer version
 
@@ -47,3 +37,4 @@ You can also pass along the database settings to this command, and it will be ad
 
 ```
 DB_PARAMS="--db-url=mysql://root:root@localhost/mydb" composer site-install
+```
