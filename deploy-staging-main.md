@@ -32,7 +32,7 @@ Use the included workflow to automatically tag and release the `main` branch. Th
 
 To use the workflow do as follows:
 
-From the repo frontpage, click "Create release" from the README. This should take you directly to the workflow. In the top right you should see a button saying "Run workflow".
+From the repo frontpage, click "Click here to create a release to production" from the README. This should take you directly to the workflow. In the top right you should see a button saying "Run workflow".
 
 ![Screenshot from 2025-01-08 12-32-53](https://github.com/user-attachments/assets/d1170732-5fc7-44d4-8262-125033df14d9)
 
