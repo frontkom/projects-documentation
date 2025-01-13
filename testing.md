@@ -42,7 +42,7 @@ jobs:
 
 NOTE: For non-standard projects you may need to adjust the branch names.
 
-If the project does not yet have any specific functional tests include the `skip_functional_tests: true` otherwise it can be remove.
+If the project does not yet have any specific functional tests include the `skip_functional_tests: true` otherwise it can be removed.
 
 This test will run on all pull requests and deployments on the branches defined in the .yml file.
 
