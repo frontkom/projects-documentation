@@ -9,6 +9,12 @@ In most projects you should be able to run all static tests with `composer test-
 
 ### Adding static tests to an existing project
 
+Example projects with static tests implemented: 
+- [frontkom/kf-cms](https://github.com/frontkom/kf-cms)
+- [frontkom/nord](https://github.com/frontkom/nord)
+- [frontkom/fagskolen-viken](https://github.com/frontkom/fagskolen-viken)
+- [frontkom/simula-backend](https://github.com/frontkom/simula-backend)
+
 #### 1. Add a run-tests.yml file 
 
 Add the following content to `/.github/workflows/run-tests.yml` within your project: 
@@ -50,30 +56,116 @@ The test uses the [standard run-tests.yml workflow](https://github.com/Frontkom-
 
 #### 2. Update composer.json
 
-As part of the [reusable-test.yml](https://github.com/Frontkom-DevOps/shared-workflows-drupal/blob/2.x/.github/workflows/reusable-test.yml) workflow a Composer script called `test-static` within the local project is called so this needs to be setup within the local projects `composer.json` file within the `scripts` objects:
+As part of the [reusable-test.yml](https://github.com/Frontkom-DevOps/shared-workflows-drupal/blob/2.x/.github/workflows/reusable-test.yml) workflow 2 Composer scripts: `site-install` and `test-static` within the local project are called so these needs to be setup and functional within the local projects `composer.json` file within the `scripts` objects:
 
+`site-install` scripts:
+```
+"si": "@composer site-install",
+"site-install": [
+  "@composer install",
+  "./vendor/bin/drush --root=$(pwd)/web site:install minimal ${DB_PARAMS} --existing-config --yes",
+  "@composer import",
+  "./vendor/bin/drush --root=$(pwd)/web cache:rebuild",
+  "@composer set-up-default-content"
+],
+"set-up-default-content": [
+  "./vendor/bin/drush default-content-deploy:import --force-override --yes"
+],
+"import": [
+  "./vendor/bin/drush --root=$(pwd)/web cache:clear drush",
+  "./vendor/bin/drush --root=$(pwd)/web config:import --yes"
+],
+```
 
+`test-static` scripts:
 ```
 "phpcs": [
-    "./vendor/bin/phpcs -p -n"
+  "./vendor/bin/phpcs -p -n"
 ],
 "phpunit": [
-    "./vendor/bin/phpunit"
+  "./vendor/bin/phpunit"
 ],
 "phpstan": [
-    "./vendor/bin/phpstan analyse"
+  "./vendor/bin/phpstan analyse"
 ],
 "test-static": [
-    "@composer install",
-    "@composer validate --no-check-all --no-check-publish",
-    "@composer phpcs",
-    "@composer phpstan",
-    "@composer phpunit"
+  "@composer install",
+  "@composer validate --no-check-all --no-check-publish",
+  "@composer phpcs",
+  "@composer phpstan",
+  "@composer phpunit"
 ]
 ```
 
+Examples on live projects: 
+- [frontkom/kf-cms](https://github.com/frontkom/kf-cms/blob/develop/composer.json#L95)
+- [frontkom/nord](https://github.com/frontkom/nord/blob/develop/composer.json#L180)
+- [frontkom/fagskolen-viken](https://github.com/frontkom/fagskolen-viken/blob/develop/composer.json#L249)
+
 The `drupal/core-dev` package either directly or indirectly requires the `phpcs`, `phpunit` and `phpstan` packages so they should all be available within the project as vendor packages.
 
+For the `site-install` test you will likely need to change the projects installer profile from `standard` to `minimal` using a `hook_update_X` within a `.install` file in addition to updating the config `core.extension.yml`. This is a one-time change and **should be monitored with caution when deploying as it had the potential to break things**.
+
+`hook_update_X` example: 
+
+```
+/**
+ * Change the profile to minimal and install the minimal theme.
+ */
+function MODULE_update_9001() {
+  // The minimal profile has some config objects that depend on stark. To be
+  // able to install the profile, we need to enable stark as well. This is fine
+  // though, since afterwards, we will import the config, and the enabling of
+  // the theme will be reverted automatically.
+  \Drupal::service('theme_installer')->install(['stark']);
+
+  $old = 'standard';
+  $new = 'minimal';
+  \Drupal::configFactory()->getEditable('core.extension')
+    ->set('profile', $new)
+    ->save();
+  drupal_flush_all_caches();
+
+  \Drupal::service('module_installer')->install([$new]);
+  \Drupal::service('module_installer')->uninstall([$old]);
+
+  $sc = \Drupal::keyValue('system.schema');
+  $weight = 8000;
+  if ($weight = $sc->get($old)) {
+    $sc->delete($old);
+  }
+  $sc->set($new, $weight);
+  drupal_flush_all_caches();
+}
+```
+
+`core.extension.yml` example: 
+
+```diff
+module:
+   .......
+   monolog: 0
+   monolog_elasticsearch_date_processor: 0
+   paragraphs: 11
+   tvi: 15
+   better_formats: 100
+-  standard: 1000
++  minimal: 1000
+theme:
+   .......
+   gin: 0
+   stable9: 0
+-profile: standard
++profile: minimal
+```
+
+To test `site-install` locally, backup your working database, then run:
+
+```
+ddev ssh
+drush updatedb
+composer run site-install
+```
 
 #### 3. `phpcs`, `phpunit` and `phpstan` config files
 
