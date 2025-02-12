@@ -1,6 +1,6 @@
-# Standard Frontkom test setup
+# Adding Standard Frontkom test setup to an existing project.
 
-In most projects the testing is divided into two parts: Static tests and Functional tests
+For a description of all Drupal testing, see the drupal testing docs: https://github.com/frontkom/projects-documentation/blob/1.x/drupal-testing.md
 
 ## Static tests
 
