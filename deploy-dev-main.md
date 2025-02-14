@@ -33,3 +33,16 @@ From the repo frontpage, click "Click here to create a release to production" fr
 ![Screenshot from 2025-01-08 12-32-53](https://github.com/user-attachments/assets/d1170732-5fc7-44d4-8262-125033df14d9)
 
 Click the button "Run workflow" and accept the default values.
+
+## How to release a hotfix directly to production
+
+From time to time it can be either critical bugs or security issues that needs to go directly to prod. To do this, follow the following procedure:
+
+- Check out `main` on your computer (for example with `git checkout main`).
+- Make sure your main branch is up to date (for example with `git pull origin main`)
+- Create a new branch from main (for example with `git checkout -b hotfix/critical-bug-123`)
+- Commit your changes to this branch
+- Push your branch to github (for example with `git push -u origin hotfix/critical-bug-123`)
+- This should make it possible to create a new pull request, and you want to make sure your PR requests to merge into `main` (and not develop).
+
+When this pull request has been merged, a new deployment should be automatically triggered to production.
