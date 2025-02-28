@@ -2,7 +2,7 @@
 
 ## Getting the environment ready
 
-- Make sure the project is using drush 10
+- Make sure the project is using drush 11
 - Make sure the project has at least version ^1.0 of all phpstan related modules (`mglaman/phpstan-drupal`, `phpstan/phpstan-deprecation-rules`, `phpstan/extension-installer` and `phpstan/phpstan-phpunit`
 - Make sure the project has upgrade status enabled
 - Make sure the project has `drupal/drupal-extension` version 4 or higher.
