@@ -1,5 +1,57 @@
 # Upgrade from Drupal 9 to Drupal 10
 
+## Getting the environment ready
+
+- Make sure the project is using drush 12
+- Make sure the project has at least version ^1.0 of all phpstan related modules (`mglaman/phpstan-drupal`, `phpstan/phpstan-deprecation-rules`, `phpstan/extension-installer` and `phpstan/phpstan-phpunit`
+- Make sure the project has upgrade status enabled
+- Make sure the project has `drupal/drupal-extension` version 4 or higher.
+
+## Upgrade all of the contrib modules
+
+It is extremely important to upgrade all of the contrib modules following a specific pattern:
+
+- Upgrade the module with composer
+- Run database updates (if any)
+- Export config (if it differs)
+
+To make this as easy as possible, you can use this one-liner that runs all of those commands and asks for the module name:
+
+``` 
+clear && echo "What is the machine name of the contrib module (i.e commerce, or address)?" && read -r MODULE_NAME && composer update drupal/$MODULE_NAME && drush updb -y && composer export
+``` 
+
+Some modules would require you to also update them with dependencies. In which case you would just append that at the right place in the one-liner:
+
+```
+clear && echo "What is the machine name of the contrib module (i.e commerce, or address)?" && read -r MODULE_NAME && composer update drupal/$MODULE_NAME --with-dependencies && drush updb -y && composer export
+``` 
+
+Proceed to upgrade each and every one of them, until there are no incomatible contrib modules on the upgrade status page.
+
+If the project is set to use a site schema, remember to commit site schema files along with composer and config changes.
+
+## Upgrade Drupal core
+
+First we do this:
+
+```
+composer require 'drupal/core-recommended:^10' 'drupal/core-composer-scaffold:^10' --update-with-dependencies --no-update
+``` 
+
+Then, hopefully, if we are lucky. This should now work:
+
+```
+composer update "drupal/core*" "symfony/*" composer/installers drush/drush --with-dependencies
+```
+
+If it does not work, use this command to try to troubleshoot:
+
+```
+# Replace 9.5.1 with whatever is the latest drupal core.
+composer why-not drupal/core 10.4.3
+```
+
 ## Common errors and how to fix them
 
 ### Problem with PHPUnit tests and ignoreFile
